@@ -16,6 +16,9 @@ def index():
             model="text-davinci-003",
             prompt=generate_prompt(news_headline),
             temperature=0.6,
+            n=1,
+            max_tokens=256,
+            stop=None,
         )
         print(response);
         return redirect(url_for("index", result=response.choices[0].text))
