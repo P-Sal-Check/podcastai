@@ -24,5 +24,7 @@ class NewsScrapper:
         for url in  self.__get_news_urls(num_of_news): 
             news.append(self.__create_news_with(url))
         
+        if news.count == 0:
+            raise RuntimeError("뉴스를 스크랩 하는데 실패함.")
         return news
  
