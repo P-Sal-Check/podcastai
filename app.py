@@ -23,7 +23,11 @@ def index():
             stop=None,
         )
         print(response)
-        return redirect(url_for("index", result=response.choices[0].text))
+        ai_script = response.choices[0].text
+        tts_output = SpeechGenerator().generate(ai_script)
+
+        generate_audio(tts_response=tts_output)
+        return redirect(url_for("index", result=ai_script))
 
     result = request.args.get("result")
     return render_template("index.html", result=result)
@@ -38,3 +42,11 @@ def generate_prompt(news_headline):
           """.format(
         news_headline.capitalize()
     )
+
+
+def generate_audio(tts_response):
+    file_name = 'output.mp3'
+
+    with open(file_name, 'wb') as out:
+        out.write(tts_response.audio_content)
+        print('Audio content written to file "{}"'.format(file_name))
