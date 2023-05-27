@@ -12,8 +12,11 @@ did_api_key = os.getenv("DID_API_KEY")
 
 
 class VideoGenerator:
+    # TODO: text, audio 타입에 따라 option이 input, audio_url 로 변경되도록 추상화
+    # 근데 왜 파이썬에는 인터페이스가 없지
     __src_type: Literal["text", "audio"] = None
     __option: str = None
+
     url_param: str = None
 
     def __init__(self, src_type, option):
@@ -21,6 +24,7 @@ class VideoGenerator:
         self.__option = option
         pass
 
+    # 비디오를 생성하여 did 서버에 저장
     def postVideo(self):
         headers = {
             "authorization": "Basic {}".format(did_api_key),
@@ -29,7 +33,7 @@ class VideoGenerator:
         }
         payload = {
             "script": {
-                "type": self.__src_type,
+                "type": self.__src_type,  # "text" | "audio"
                 "subtitles": "false",
                 "provider": {
                     "type": voice_provider,
@@ -37,7 +41,7 @@ class VideoGenerator:
                 },
                 "ssml": "false",
                 "reduce_noise": "false",
-                "input": "resolve this url issues ㅠㅠ"
+                "input": "resolve this url issues ㅠㅠ"  # or "audio_url": "###"
             },
             "config": {
                 "fluent": "false",
@@ -49,6 +53,7 @@ class VideoGenerator:
         self.url_param = response.text.id
         return response.text.id  # 비디오 저장소 url 요청 param source
 
+    # did 서버에 요청하여 다운로드
     def getVideo(self):
         url = "https://api.d-id.com/talks/{}".format(self.url_param)
 
@@ -60,6 +65,3 @@ class VideoGenerator:
         response = requests.get(url, headers=headers)
 
         print(response.text)
-
-
-VideoGenerator('text', None).getUrl()
