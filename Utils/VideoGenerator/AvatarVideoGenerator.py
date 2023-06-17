@@ -11,7 +11,7 @@ voice_id = "ko-KR-SeoHyeonNeural"
 did_api_key = os.getenv("DID_API_KEY")
 
 
-class VideoGenerator:
+class AvatarVideoGenerator:
     # TODO: text, audio 타입에 따라 option이 input, audio_url 로 변경되도록 추상화
     # 근데 왜 파이썬에는 인터페이스가 없지
     __src_type: Literal["text", "audio"] = None
@@ -25,7 +25,7 @@ class VideoGenerator:
         pass
 
     # 비디오를 생성하여 did 서버에 저장
-    def postVideo(self):
+    def generate(self):
         headers = {
             "authorization": "Basic {}".format(did_api_key),
             "accept": "application/json",
@@ -51,10 +51,8 @@ class VideoGenerator:
         }
         response = requests.post(request_url, json=payload, headers=headers)
         self.url_param = response.text.id
-        return response.text.id  # 비디오 저장소 url 요청 param source
 
-    # did 서버에 요청하여 다운로드
-    def getVideo(self):
+        # did 서버에 다운로드 요청
         url = "https://api.d-id.com/talks/{}".format(self.url_param)
 
         headers = {
@@ -63,5 +61,4 @@ class VideoGenerator:
         }
 
         response = requests.get(url, headers=headers)
-
-        print(response.text)
+        return response
