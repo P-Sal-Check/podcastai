@@ -17,3 +17,4 @@ build/
 
 .env
 gcloud-key.json
+client_secrets.json
