@@ -13,7 +13,7 @@ news_route_url = "https://news.naver.com/main/ranking/popularDay.naver"
 @app.route("/", methods=("GET", "POST"))
 def index():
     if request.method == "POST":
-        print('request POST started.')
+        print('Apppy - request POST started.')
         news = NewsScrapper(news_route_url).get_news(1)[0]
         news_headline = news.title
         news_top_image = news.top_image
@@ -25,7 +25,6 @@ def index():
             max_tokens=256,
             stop=None,
         )
-        print(response, news)
         ai_script = response.choices[0].text
         audio = SpeechGenerator().generate(ai_script)
         ThumbVideoGenerator().generate(news_top_image, audio, news_headline)

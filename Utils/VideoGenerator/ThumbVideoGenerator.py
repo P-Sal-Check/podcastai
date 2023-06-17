@@ -22,4 +22,6 @@ class ThumbVideoGenerator:
 
         videoclip.write_videofile(
             f"videos/{file_name}.mp4", codec='libx264', fps=24)
+
+        print('ThumbVideoGeneratorpy - Generate Video.')
         return videoclip

@@ -31,5 +31,5 @@ class SpeechGenerator:
         syntehsize_speech = self.client.synthesize_speech(
             input=synthesis_input, voice=voice, audio_config=audio_config
         )
-
+        print('SpeechGeneratorpy - Generate TTS')
         return self.__make_file(syntehsize_speech)
