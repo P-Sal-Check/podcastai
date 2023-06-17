@@ -19,6 +19,8 @@ class SpeechGenerator:
             out.write(syntehsize_speech.audio_content)
             print('Audio content written to file "{}"'.format(file_name))
 
+        return file_name
+
     def generate(self, text):
         synthesis_input = texttospeech.SynthesisInput(text=text)
         voice = texttospeech.VoiceSelectionParams(
@@ -30,5 +32,4 @@ class SpeechGenerator:
             input=synthesis_input, voice=voice, audio_config=audio_config
         )
 
-        self.__make_file(syntehsize_speech)
-        return None
+        return self.__make_file(syntehsize_speech)

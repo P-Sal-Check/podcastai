@@ -3,6 +3,7 @@ import openai
 from flask import Flask, redirect, render_template, request, url_for
 from Utils.NewsScrapper import NewsScrapper
 from Utils.SpeechGenerator import SpeechGenerator
+from Utils.VideoGenerator.ThumbVideoGenerator import ThumbVideoGenerator
 
 app = Flask(__name__)
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -13,7 +14,9 @@ news_route_url = "https://news.naver.com/main/ranking/popularDay.naver"
 def index():
     if request.method == "POST":
         print('request POST started.')
-        news_headline = NewsScrapper(news_route_url).get_news(1)[0].title
+        news = NewsScrapper(news_route_url).get_news(1)[0]
+        news_headline = news.title
+        news_top_image = news.top_image
         response = openai.Completion.create(
             model="text-davinci-003",
             prompt=generate_prompt(news_headline),
@@ -22,10 +25,10 @@ def index():
             max_tokens=256,
             stop=None,
         )
-        print(response)
+        print(response, news)
         ai_script = response.choices[0].text
-        SpeechGenerator().generate(ai_script)
-
+        audio = SpeechGenerator().generate(ai_script)
+        ThumbVideoGenerator().generate(news_top_image, audio, news_headline)
         return redirect(url_for("index", result=ai_script))
 
     result = request.args.get("result")
