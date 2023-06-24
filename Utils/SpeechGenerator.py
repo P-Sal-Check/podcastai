@@ -12,8 +12,8 @@ class SpeechGenerator:
             credentials=self.credentials)
         pass
 
-    def __make_file(self, syntehsize_speech):
-        file_name = 'output.mp3'
+    def __make_file(self, syntehsize_speech, headline):
+        file_name = f"audios/{headline}.mp3"
 
         with open(file_name, 'wb') as out:
             out.write(syntehsize_speech.audio_content)
@@ -21,7 +21,7 @@ class SpeechGenerator:
 
         return file_name
 
-    def generate(self, text):
+    def generate(self, text, headline):
         synthesis_input = texttospeech.SynthesisInput(text=text)
         voice = texttospeech.VoiceSelectionParams(
             language_code="ko-KR", ssml_gender=texttospeech.SsmlVoiceGender.FEMALE)
@@ -32,4 +32,4 @@ class SpeechGenerator:
             input=synthesis_input, voice=voice, audio_config=audio_config
         )
         print('SpeechGeneratorpy - Generate TTS')
-        return self.__make_file(syntehsize_speech)
+        return self.__make_file(syntehsize_speech, headline)
