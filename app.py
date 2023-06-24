@@ -32,7 +32,7 @@ def index():
         ai_script = response.choices[0].text
         audio = SpeechGenerator().generate(ai_script)
         if(news_top_image == ''):
-            pass
+            return redirect(url_for("index", result="got Errors."))
         ThumbVideoGenerator().generate(news_top_image, audio, news_headline)
         YouTubeUploader().upload_video(news_headline, news_description)
         return redirect(url_for("index", result=ai_script))
